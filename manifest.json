@@ -1,0 +1,11 @@
+{
+    "manifest_version": 3,
+    "name": "Time Manager",
+    "version": "1.0",
+    "description": "Stay focused",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": ["webRequest"],
+    "host_permissions": ["*://"]
+}
