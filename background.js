@@ -2,7 +2,7 @@ import {isPresent} from "./utils/isPresent.js";
 
 // Initialize the tab count
 let tabCount = 0;
-const specialUrls = ['chrome://newtab', 'about:blank', 'chrome://extensions'];
+const specialUrls = ['newtab', 'about:blank', 'extensions'];
 
 // Operations on the tabCount
 chrome.tabs.onCreated.addListener((tab) => {
@@ -38,7 +38,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                     domains[alreadyUsedTabId]["totalTime"] += Date.now() - domains[alreadyUsedTabId]["currentTime"];
                     domains[alreadyUsedTabId]["currentTime"] = Date.now();
                     if (domains[alreadyUsedTabId]["ids"].size === 0) {
+                        console.log("hii");
                         const minutes = domains[alreadyUsedTabId]["totalTime"] / (1000 * 60);
+                        domains[alreadyUsedTabId]["currentTime"] = 0;
+                        console.log(`domain: ${domains}`);
                         chrome.storage.local.get("totalTimeStorage", (data) => {
                             const totalTimeData = data.totalTimeStorage || {};
                             if (alreadyUsedTabId in totalTimeData) {
@@ -49,11 +52,16 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                             chrome.storage.local.set({"totalTimeStorage": totalTimeData});
                         })
                         domains[alreadyUsedTabId]["totalTime"] = 0;
+                    } else {
+                        domains[alreadyUsedTabId]["totalTime"] += Date.now() - domains[alreadyUsedTabId]["currentTime"];
+                        domains[alreadyUsedTabId]["currentTime"] = Date.now();
                     }
-                    domains[alreadyUsedTabId]["currentTime"] = Date.now();
                 }
                 if (domain in domains) {
                     domains[domain]["ids"].add(tabId);
+                    if (domains[domain]["ids"].size === 1) {
+                        domains[domain]["currentTime"] = Date.now();
+                    }
                 } else {
                     domains[domain] = {
                         "ids": new Set([tabId]),
@@ -85,7 +93,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
             domains[idCheck]["ids"].delete(tabId);
             if (domains[idCheck]["ids"].size === 0) {
                 domains[idCheck]["totalTime"] += Date.now() - domains[idCheck]["currentTime"];
-                domains[idCheck]["currentTime"] = Date.now();;
+                domains[idCheck]["currentTime"] = 0;
                 const minutes = domains[idCheck]["totalTime"] / (1000 * 60);
                 chrome.storage.local.get("totalTimeStorage", (data) => {
                     const totalData = data.totalTimeStorage || {};
@@ -96,6 +104,10 @@ chrome.tabs.onRemoved.addListener((tabId) => {
                     }
                     chrome.storage.local.set({"totalTimeStorage": totalData});
                 })
+                domains[idCheck]["totalTime"] = 0;
+            } else {
+                domains[idCheck]["totalTime"] += Date.now() - domains[idCheck]["currentTime"];
+                domains[idCheck]["currentTime"] = Date.now();
             }
         }
         for (const domain in domains) {
