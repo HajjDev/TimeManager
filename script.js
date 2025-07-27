@@ -5,7 +5,7 @@ chrome.runtime.sendMessage({action: "tabCount"}, (res) => {
 
 // Make sure to initialize TotalTime and domains only 1 time.
 chrome.storage.local.get("totalTimeStorage", (data) => {
-    const totalData = data.totalTime || {};
+    const totalData = data.totalTimeStorage || {};
     chrome.storage.local.set({"totalTimeStorage": totalData});
 })
 
