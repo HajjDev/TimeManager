@@ -4,8 +4,29 @@
     "version": "1.0",
     "description": "Stay focused",
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "layout.html"
     },
-    "permissions": ["webRequest"],
-    "host_permissions": ["*://"]
+    "permissions": [
+        "storage",
+        "webRequest",
+        "tabs",
+        "scripting"        
+    ],
+    
+    "content_scripts":[
+        {
+            "matches":[
+                "<all_urls>"
+            ],
+            "js":["script.js"]
+            
+        }
+    ],
+
+    "background":{
+        "service_worker":"background.js"
+    },
+    "host_permissions":[
+        "<all_urls>"
+    ]
 }

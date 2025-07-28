@@ -1,0 +1,30 @@
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    height: 100vh;
+    height:100svh;
+
+}
+
+div{
+    width:100%;
+}
+
+.head_div{
+    width:20rem;
+    height:30rem;
+    text-align: center;
+}
+
+img{
+    max-height:100%;
+    max-width:100%;
+}
+
+.options > * {
+    cursor:pointer;
+}
