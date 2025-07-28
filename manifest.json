@@ -10,7 +10,8 @@
         "storage",
         "webRequest",
         "tabs",
-        "scripting"        
+        "scripting",
+        "nativeMessaging"        
     ],
     
     "content_scripts":[
