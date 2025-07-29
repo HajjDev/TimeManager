@@ -1,16 +1,6 @@
 import {isPresent} from "./utils/isPresent.js";
 
-// Initialize the tab count
-let tabCount = 0;
 const specialUrls = ['newtab', 'about:blank', 'extensions'];
-
-// Operations on the tabCount
-chrome.tabs.onCreated.addListener((tab) => {
-    tabCount ++;
-});
-chrome.tabs.onRemoved.addListener((tab) => {
-    tabCount --;
-});
 
 // Message receiver that sends a response for a particular message.
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
