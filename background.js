@@ -1,6 +1,33 @@
+"use strict";
 import {isPresent} from "./utils/isPresent.js";
-
 const specialUrls = ['newtab', 'about:blank', 'extensions'];
+
+chrome.webRequest.onBeforeRequest.addListener(function(details){
+    const url = new URL(details.url);
+
+    const updateData = async ()=>{
+        let tmp = await chrome.storage.local.get(["data"]);
+        let data = tmp.data;
+
+        if (!tmp || !data){
+             data = {};
+        }
+        
+        
+        if (!(url.hostname in data)){
+            data[url.hostname] = {blocked:false};
+            chrome.storage.local.set({ data:{...data} });
+        }
+
+    }
+    
+    updateData();
+
+    }, 
+    {urls:["<all_urls>"]},
+
+    []
+);
 
 // Message receiver that sends a response for a particular message.
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
